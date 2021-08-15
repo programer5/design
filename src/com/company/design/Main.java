@@ -1,33 +1,39 @@
 package com.company.design;
 
 import com.company.design.adapter.*;
-import com.company.design.singleton.AClazz;
-import com.company.design.singleton.BClazz;
-import com.company.design.singleton.SocketClient;
+import com.company.design.decorator.*;
+import com.company.design.facade.Ftp;
+import com.company.design.facade.Reader;
+import com.company.design.facade.SftpClient;
+import com.company.design.facade.Writer;
+import com.company.design.observer.Button;
+import com.company.design.observer.IButtonListener;
+import com.company.design.strategy.*;
 
 public class Main {
 
     public static void main(String[] args) {
+        Encoder encoder = new Encoder();
 
-//        AClazz aClazz = new AClazz();
-//        BClazz bClazz = new BClazz();
-//
-//        SocketClient aClient = aClazz.getSocketClient();
-//        SocketClient bClient = bClazz.getSocketClient();
-//
-//        System.out.println("두개의 객체가 동일한가?");
-//        System.out.println(aClient.equals(bClient));
+        // base64
+        EncodingStrategy base64 = new Base64strategy();
 
-        HairDryer hairDryer = new HairDryer();
-        connect(hairDryer);
+        // normal
+        EncodingStrategy normal = new Normalstrategy();
 
-        Cleaner cleaner = new Cleaner();
-        Electronic110V adapter = new SocketAdapter(cleaner);
-        connect(adapter);
+        String message = "hello java";
+        encoder.setEncodingStrategy(base64);
+        String base64Result = encoder.getMessage(message);
+        System.out.println("base64Result = " + base64Result);
 
-        AirConditioner airConditioner = new AirConditioner();
-        Electronic110V airAdapter = new SocketAdapter(airConditioner);
-        connect(airAdapter);
+        encoder.setEncodingStrategy(normal);
+        String normalResult = encoder.getMessage(message);
+        System.out.println("normalResult = " + normalResult);
+
+        encoder.setEncodingStrategy(new AppendStrategy());
+        String appendResult = encoder.getMessage(message);
+        System.out.println("appendResult = " + appendResult);
+
     }
 
     //콘센트
